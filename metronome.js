@@ -1,18 +1,15 @@
+//Tempo control slider
 let tempoSlider = document.getElementById("tempo-slider");
 let tempoText = document.getElementById("tempo-text");
-
 let beatsPerMinute = 120;
-
 let pressSlider = false;
 
 tempoSlider.addEventListener("mousedown", function(){
     pressSlider = true;
 });
-
 tempoSlider.addEventListener("mouseup", function() {
     pressSlider = false;
 });
-
 tempoSlider.addEventListener("onchange", setSliderText);
 tempoSlider.addEventListener("mousemove", setSliderText);
 
@@ -21,20 +18,18 @@ function setSliderText() {
     if (pressSlider) {
         tempoText.innerHTML = tempoSlider.value;
         beatsPerMinute = parseInt(tempoSlider.value);
-        console.log(beatsPerMinute);
-        if (isPlaying) {
-            clearInterval(interval);
-            interval = setInterval(playBeat, 60000/beatsPerMinute);
-        }
     }
 }
 
-
+//Control played beats
 let toggleButton = document.getElementById("toggle-button");
-
+let subdivisionToggle = document.getElementById("toggle-subdivisions");
+//Load sounds
 let beatAccentSound = document.getElementById("beat-audio-main");
 let beatNormalSound = document.getElementById("beat-audio-secondary");
+let beatSubdivisionSound = document.getElementById("beat-audio-subdivision");
 
+let useSubdivisions = false;
 let isPlaying = false;
 let timeout = function() {};
 
@@ -44,7 +39,6 @@ let beatText = document.getElementById("beat-text");
 let barNumber = 1;
 let beatNumber = 0;
 let beatsPerMeasure = 4;
-
 let tempoDeltas = [];
 
 //Button toggles playing/stopping of the metronome
@@ -55,6 +49,10 @@ document.addEventListener('keyup', function(event) {
     }
 });
 
+subdivisionToggle.addEventListener("click", function() {
+    useSubdivisions = !useSubdivisions;
+});
+
 function startMetronome() {
     if (isPlaying) {
         isPlaying = false;
@@ -62,6 +60,7 @@ function startMetronome() {
         toggleButton.innerHTML = "Play";
     } else {
         beatsPerMinute = parseInt(tempoSlider.value);
+        useSubdivisions = subdivisionToggle.checked;
         tempoDeltas = [];
         loadAllTempos();
         isPlaying = true;
@@ -90,7 +89,16 @@ function playBeat() {
         console.log(getDT(tempoChanges[barNumber + " " + beatNumber]));
         tempoDeltas.push(tempoChanges[barNumber + " " + beatNumber]);
     }
-    
+
+    //Remove tempo deltas at the end of their duration
+    tempoDeltas = tempoDeltas.filter(function(value, index, arr) {
+        return value.endingBar != barNumber || value.endingBeat != beatNumber;
+    });
+    let dt = 0;
+    tempoDeltas.forEach(delta => {
+        dt += getDT(delta);
+    });
+
     //Play a special sound for the first beat of every measure
     if (beatNumber == 1) {
         beatAccentSound.play();
@@ -98,18 +106,16 @@ function playBeat() {
         beatNormalSound.play();
     }
 
-    tempoDeltas = tempoDeltas.filter(function(value, index, arr) {
-        return value.endingBar != barNumber || value.endingBeat != beatNumber;
-    });
-    tempoDeltas.forEach(delta => {
-        beatsPerMinute += getDT(delta);
-    });
-    console.log(tempoDeltas);
-
-    console.log("bpm");
-    console.log(beatsPerMinute);
-
+    //If we want subdivisions, set an additional timer to play one halfway before the next beat
+    if (useSubdivisions) {
+        setTimeout(playSubdivision, 60000/(2 * beatsPerMinute + (dt/2)));
+    }
+    beatsPerMinute += dt;
     timeout = setTimeout(playBeat, 60000/beatsPerMinute);
+}
+
+function playSubdivision() {
+    beatSubdivisionSound.play();
 }
 
 let tempoChanges = {};
