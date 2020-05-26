@@ -50,7 +50,7 @@ let tempoDeltas = [];
 //Button toggles playing/stopping of the metronome
 toggleButton.addEventListener("click", startMetronome);
 document.addEventListener('keyup', function(event) {
-    if (event.code == "Space") {
+    if (event.key == "c") {
         startMetronome();
     }
 });
