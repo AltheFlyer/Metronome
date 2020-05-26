@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <link href="metronome.css" rel="stylesheet" type="text/css">
+    </head>
+
+    <body>
+        <div class="slide-container">
+            <input type="range" min="10" max="240" value="120" class="slider" id="tempo-slider">
+        </div>
+        <p>Tempo: <span id="tempo-text">120</span>bpm</p>
+        <button id="toggle-button">Play</button>
+        <p>Bar Number: <span id="bar-text">1</span></p>
+        <p>Beat: <span id="beat-text">1</span></p>
+
+
+        <div class="tempo-changes">
+            <h2>Tempo Changes</h2>
+                <form class="tempo-change">
+                    <label for="starting-bar">Starting bar</label>
+                    <input type="number" name="starting-bar">
+                    <label for="ending-bar">Ending bar</label>
+                    <input type="number" name="ending-bar">
+                    <br>
+                    <label for="starting-beat">Starting beat</label>
+                    <input type="number" name="starting-beat">
+                    <label for="ending-beat">Ending beat</label>
+                    <input type="number" name="ending-beat">
+                    <br>
+                    <label for="starting-tempo">Starting tempo</label>
+                    <input type="number" name="starting-tempo">
+                    <label for="ending-tempo">Ending tempo</label>
+                    <input type="number" name="ending-tempo">
+                    <button type="button">Delete</button>
+                </form>
+        </div>
+        <button id="add-tempo-change">Add Tempo Change</button>
+
+        <!--
+        <div class="signature-changes">
+            <h2>Time Signature Changes</h2>
+            <form class="signature-change">
+                <input type="number" name="measure">
+                <input type="number" name="note">
+                <input type="number" name="beats">
+            </form>
+        </div>
+
+        <details>
+            <summary>Raymond Section</summary>
+            <h3>Load/Save current settings</h3>
+            <form>
+                <textarea id="rawtext"></textarea>
+            </form>
+        </details>
+        -->
+
+        <audio id="beat-audio-main" src="Noise_Accent.mp3"  preload="auto"></audio>
+        <audio id="beat-audio-secondary" src="Noise_Regular.mp3"  preload="auto"></audio>
+
+        <script src="metronome.js"></script>
+    </body>
+</html>
