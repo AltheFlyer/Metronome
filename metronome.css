@@ -1,6 +1,69 @@
+* {
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, sans-serif;
+    color: white;
+    background-color: black;
+}
+
+body {
+    margin: 0;
+}
+
+main {
+    min-height: 100vh;
+}
+
+#controls {
+    padding: 5px;
+}
+
 .tempo-change {
     border: 1px solid black;
     width: fit-content;
     padding: 5px;
     border-radius: 5px;
+}
+
+#top-header {
+    text-align: center;
+    font-size: 15vmin;
+}
+
+#top-header p {
+    margin: 1vmin;
+}
+
+#main-focus {
+    text-align: center;
+    font-size: 30vmin;
+}
+
+#main-focus p {
+    margin-top: 0px;
+    margin-bottom: 20px;
+}
+
+.slide-container {
+    width: 80%;
+    margin-left: 10%;
+    text-align: center;
+}
+
+#tempo-slider {
+    width: 100%;
+}
+
+#toggle-button {
+    font-size: 24px;
+    width: 200px;
+    height: 75px;
+    border-radius: 5px;
+    border: none;
+    background-color: #5cb85c;  
+}
+
+.centered {
+    margin: auto;
+    width: 200px;
+    text-align: center;
 }

@@ -48,7 +48,14 @@ let beatsPerMeasure = 4;
 let tempoDeltas = [];
 
 //Button toggles playing/stopping of the metronome
-toggleButton.addEventListener("click", function() {
+toggleButton.addEventListener("click", startMetronome);
+document.addEventListener('keyup', function(event) {
+    if (event.code == "Space") {
+        startMetronome();
+    }
+});
+
+function startMetronome() {
     if (isPlaying) {
         isPlaying = false;
         clearTimeout(timeout);
@@ -61,10 +68,10 @@ toggleButton.addEventListener("click", function() {
         barNumber = 1;
         beatNumber = 0;
         barText.innerHTML = barNumber;
-        interval = setTimeout(playBeat, 60000/beatsPerMinute);
+        timeout = setTimeout(playBeat, 60000/beatsPerMinute);
         toggleButton.innerHTML = "Stop";
     }
-});
+}
 
 function playBeat() {
     //Update values and text display

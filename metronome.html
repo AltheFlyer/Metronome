@@ -7,13 +7,24 @@
     </head>
 
     <body>
+        <main>
+        <div id="top-header">
+            <p>Bar/Beat</p>
+        </div>
+        <div id="main-focus">
+        <p><span id="bar-text">1</span> | <span id="beat-text">1</span></p>
+        </div>
+        </main>
+
+        <div id="controls">
         <div class="slide-container">
             <input type="range" min="10" max="240" value="120" class="slider" id="tempo-slider">
+            <p>Tempo: <span id="tempo-text">120</span>bpm</p>
         </div>
-        <p>Tempo: <span id="tempo-text">120</span>bpm</p>
-        <button id="toggle-button">Play</button>
-        <p>Bar Number: <span id="bar-text">1</span></p>
-        <p>Beat: <span id="beat-text">1</span></p>
+        <div class="centered">
+            <button id="toggle-button">Play</button>
+            <p>(Or press space)</p>
+        </div>
 
 
         <div class="tempo-changes">
@@ -37,6 +48,9 @@
                 </form>
         </div>
         <button id="add-tempo-change">Add Tempo Change</button>
+
+
+        </div>
 
         <!--
         <div class="signature-changes">
