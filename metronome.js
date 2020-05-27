@@ -142,7 +142,6 @@ function loadAllTempos() {
             endingTempo: parseInt(change["ending-tempo"].value)
         });
     }
-    console.log(tempoChanges);
 }
 
 //Set delete button functionality
@@ -197,7 +196,6 @@ function saveData() {
         countIn: countIn.value,
         tempoDeltas: mapRep
     };
-    console.log(saveOutput);
     saveField.value = JSON.stringify(saveOutput);
 }
 
@@ -205,18 +203,18 @@ function loadData() {
     let saveInput = JSON.parse(saveField.value);
 
     tempoSlider.value = saveInput.tempo;
-    beatsPerMinue = parseInt(saveInput.tempo);
+    tempoText.innerHTML = tempoSlider.value;
+    beatsPerMinute = parseInt(saveInput.tempo);
 
+    console.log(saveInput.useSubdivisions);
     subdivisionToggle.checked = saveInput.useSubdivisions;
     useSubdivisions = saveInput.useSubdivisions;
 
-    subdivideTempoChange.checked = saveInput.subdivideTempoChange;
+    subdivideTempoToggle.checked = saveInput.subdivideTempoChange;
     subdivideTempoChange = saveInput.subdivideTempoChange;
 
     countIn.value = saveInput.countIn;
 
-
-    
     //Pain
     changeHolder.innerHTML = "<h2>Tempo Changes</h2>";
 
@@ -224,7 +222,6 @@ function loadData() {
     for (let k of Object.keys(saveInput.tempoDeltas)) {
         let data = saveInput.tempoDeltas[k];
         tempoDeltas.set(k, data);
-
 
         tempoChangeClone = tempoChangeClone.cloneNode(true);
         //Need to manually add delete button functionality for some reason?
@@ -241,8 +238,4 @@ function loadData() {
 
         changeHolder.append(tempoChangeClone);
     }
-
-
-
-
 }
