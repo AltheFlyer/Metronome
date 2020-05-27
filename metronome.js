@@ -72,7 +72,7 @@ function startMetronome() {
         tempoDeltas = [];
         loadAllTempos();
         isPlaying = true;
-        barNumber = 1 - parseInt(countin.value);
+        barNumber = 1 - parseInt(countIn.value);
         beatNumber = 0;
         barText.innerHTML = barNumber;
         timeout = setTimeout(playBeat, 60000/beatsPerMinute);
@@ -91,11 +91,8 @@ function playBeat() {
     beatText.innerHTML = beatNumber;
 
     //Check if tempo change should happen
-    if (barNumber + " " + beatNumber in tempoChanges) {
-        console.log("Tempo Change!");
-        console.log(tempoChanges[barNumber + " " + beatNumber]);
-        console.log(getDT(tempoChanges[barNumber + " " + beatNumber]));
-        tempoDeltas.push(tempoChanges[barNumber + " " + beatNumber]);
+    if (tempoChanges.has(barNumber + " " + beatNumber)) {
+        tempoDeltas.push(tempoChanges.get(barNumber + " " + beatNumber));
     }
 
     //Remove tempo deltas at the end of their duration
@@ -126,24 +123,24 @@ function playSubdivision() {
     beatSubdivisionSound.play();
 }
 
-let tempoChanges = {};
+let tempoChanges = new Map();
 let changeHolder = document.querySelector(".tempo-changes");
 
 function loadAllTempos() {
     //Find up tempo changes section
     let changes = changeHolder.querySelectorAll(".tempo-change");
-    tempoChanges = {};
+    tempoChanges = new Map();
     for (let i = 0; i < changes.length; i++) {
         //Load form elements
         let change = changes[i].elements
-        tempoChanges[change["starting-bar"].value + " " + change["starting-beat"].value] = {
+        tempoChanges.set(change["starting-bar"].value + " " + change["starting-beat"].value, {
             startingBar: parseInt(change["starting-bar"].value),
             startingBeat: parseInt(change["starting-beat"].value),
             endingBar: parseInt(change["ending-bar"].value), 
             endingBeat: parseInt(change["ending-beat"].value),
             startingTempo: parseInt(change["starting-tempo"].value),
             endingTempo: parseInt(change["ending-tempo"].value)
-        };
+        });
     }
     console.log(tempoChanges);
 }
@@ -179,19 +176,73 @@ function getDT(tempoChange) {
     return (tempoChange.endingTempo - tempoChange.startingTempo)/(totalBeats);
 }
 
-/*
+let saveField = document.getElementById("save-field");
+let saveButton = document.getElementById("save-button");
+let loadButton = document.getElementById("load-button");
+
+saveButton.addEventListener("click", saveData);
+loadButton.addEventListener("click", loadData);
+
 function saveData() {
-    let saveOutput = "";
-    //Line 1: Tempo
-    saveOutput += tempoSlider.value + "\n";
     loadAllTempos();
-    saveOutput += JSON.stringify(tempoChanges);
-
+    //WHY ARE MAPS PAINFUL
+    let mapRep = Object.create(null);
+    for (let [k, v] of tempoChanges) {
+        mapRep[k] = v;
+    }
+    let saveOutput = {
+        tempo: tempoSlider.value,
+        useSubdivisions: useSubdivisions,
+        subdivideTempoChange: subdivideTempoChange,
+        countIn: countIn.value,
+        tempoDeltas: mapRep
+    };
     console.log(saveOutput);
+    saveField.value = JSON.stringify(saveOutput);
 }
-
 
 function loadData() {
+    let saveInput = JSON.parse(saveField.value);
+
+    tempoSlider.value = saveInput.tempo;
+    beatsPerMinue = parseInt(saveInput.tempo);
+
+    subdivisionToggle.checked = saveInput.useSubdivisions;
+    useSubdivisions = saveInput.useSubdivisions;
+
+    subdivideTempoChange.checked = saveInput.subdivideTempoChange;
+    subdivideTempoChange = saveInput.subdivideTempoChange;
+
+    countIn.value = saveInput.countIn;
+
+
+    
+    //Pain
+    changeHolder.innerHTML = "<h2>Tempo Changes</h2>";
+
+    let tempoDeltas = new Map();
+    for (let k of Object.keys(saveInput.tempoDeltas)) {
+        let data = saveInput.tempoDeltas[k];
+        tempoDeltas.set(k, data);
+
+
+        tempoChangeClone = tempoChangeClone.cloneNode(true);
+        //Need to manually add delete button functionality for some reason?
+        let button = tempoChangeClone.querySelector("button")
+        button.addEventListener("click", removeParent);
+    
+        let form = tempoChangeClone.elements; 
+        form["starting-bar"].value = data.startingBar;
+        form["starting-beat"].value = data.startingBeat;
+        form["ending-bar"].value = data.endingBar; 
+        form["ending-beat"].value = data.endingBeat;
+        form["starting-tempo"].value = data.startingTempo;
+        form["ending-tempo"].value = data.endingTempo;
+
+        changeHolder.append(tempoChangeClone);
+    }
+
+
+
 
 }
-*/

@@ -3,8 +3,10 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta author="Allen Liu">
         <link href="metronome.css" rel="stylesheet" type="text/css">
-        <title>♫Metronome♫</title>
+        <title>♫ Metronome ♫</title>
     </head>
 
     <body>
@@ -46,8 +48,6 @@
                 </div>
             </div>
 
-            
-
             <div class="tempo-changes">
                 <h2>Tempo Changes</h2>
                     <form class="tempo-change">
@@ -70,7 +70,14 @@
             </div>
             <button id="add-tempo-change">Add Tempo Change</button>
 
+            <h3>Load/Save current settings</h3>
+            <form>
+                <textarea id="save-field" cols="50" rows="20"></textarea>
+            </form>
+            <button id="save-button">Save current settings as text</button>
+            <button id="load-button">Load pasted settings</button>
 
+            <p>Page by Allen Liu<br>Audio from Raymond Li</p>
         </div>
 
         <!--
@@ -82,15 +89,9 @@
                 <input type="number" name="beats">
             </form>
         </div>
-
-        <details>
-            <summary>Raymond Section</summary>
-            <h3>Load/Save current settings</h3>
-            <form>
-                <textarea id="rawtext"></textarea>
-            </form>
-        </details>
         -->
+
+        
 
         <audio id="beat-audio-main" src="Noise_Accent.mp3"  preload="auto"></audio>
         <audio id="beat-audio-secondary" src="Noise_Regular.mp3"  preload="auto"></audio>
