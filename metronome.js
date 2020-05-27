@@ -10,7 +10,7 @@ tempoSlider.addEventListener("mousedown", function(){
 tempoSlider.addEventListener("mouseup", function() {
     pressSlider = false;
 });
-tempoSlider.addEventListener("onchange", setSliderText);
+tempoSlider.addEventListener("change", setSliderText);
 tempoSlider.addEventListener("mousemove", setSliderText);
 
 //Updates tempo text and value
@@ -196,11 +196,11 @@ function saveData() {
         countIn: countIn.value,
         tempoDeltas: mapRep
     };
-    saveField.value = JSON.stringify(saveOutput);
+    saveField.value = btoa(JSON.stringify(saveOutput));
 }
 
 function loadData() {
-    let saveInput = JSON.parse(saveField.value);
+    let saveInput = JSON.parse(atob(saveField.value));
 
     tempoSlider.value = saveInput.tempo;
     tempoText.innerHTML = tempoSlider.value;

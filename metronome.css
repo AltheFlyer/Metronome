@@ -19,10 +19,35 @@ main {
 }
 
 .tempo-change {
-    border: 1px solid black;
+    border: 2px solid #dddddd;
     width: fit-content;
     padding: 5px;
     border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.delete-button {
+    background-color: #cc0000;
+    border: none;
+    border-radius: 3px;
+    transition: .5s;
+}
+
+.delete-button:hover {
+    background-color: #ee0000;
+}
+
+#add-tempo-change {
+    margin-top: 10px;
+    background-color: #5cb85c;
+    border: none;
+    border-radius: 5px;
+    height: 30px;
+    transition: .5s;
+}
+
+#add-tempo-change:hover {
+    background-color: #7cd87c;
 }
 
 #top-header {
@@ -61,6 +86,11 @@ main {
     border-radius: 5px;
     border: none;
     background-color: #5cb85c;  
+    transition: .5s;
+}
+
+#toggle-button:hover {
+    background-color: #7cd87c;
 }
 
 .centered {
@@ -116,4 +146,10 @@ input:focus + .toggle-slider {
 
 input:checked + .toggle-slider:before {
     transform: translateX(25px);
+}
+
+input[type="number"] {
+    margin-top: 3px;
+    border: 1px solid #cccccc;
+    border-radius: 2px;
 }
