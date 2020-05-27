@@ -4,6 +4,7 @@
     <head>
         <meta charset="utf-8">
         <link href="metronome.css" rel="stylesheet" type="text/css">
+        <title>♫Metronome♫</title>
     </head>
 
     <body>
@@ -24,12 +25,19 @@
         <div class="centered">
             <button id="toggle-button">Play</button>
             <p>(Or press c)</p>
-            <span>Include Subdivisions</span>
-            <label class="switch">
-                <input type="checkbox" id="toggle-subdivisions">
-                <span class="toggle-slider"></span>
-            </label>
-        </div>
+
+        <span>Subdivide all</span>
+        <label class="switch">
+            <input type="checkbox" id="toggle-subdivisions">
+            <span class="toggle-slider"></span>
+        </label>
+        <br>
+        <span>Subdivide tempo changes</span>
+        <label class="switch">
+            <input type="checkbox" id="toggle-tempo-subdivisions" checked="true">
+            <span class="toggle-slider"></span>
+        </label>
+    </div>
 
 
         <div class="tempo-changes">

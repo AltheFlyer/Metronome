@@ -24,12 +24,14 @@ function setSliderText() {
 //Control played beats
 let toggleButton = document.getElementById("toggle-button");
 let subdivisionToggle = document.getElementById("toggle-subdivisions");
+let subdivideTempoToggle = document.getElementById("toggle-tempo-subdivisions");
 //Load sounds
 let beatAccentSound = document.getElementById("beat-audio-main");
 let beatNormalSound = document.getElementById("beat-audio-secondary");
 let beatSubdivisionSound = document.getElementById("beat-audio-subdivision");
 
 let useSubdivisions = false;
+let subdivideTempoChange = true;
 let isPlaying = false;
 let timeout = function() {};
 
@@ -53,6 +55,10 @@ subdivisionToggle.addEventListener("click", function() {
     useSubdivisions = !useSubdivisions;
 });
 
+subdivideTempoToggle.addEventListener("click", function() {
+    subdivideTempoChange = !subdivideTempoChange;
+});
+
 function startMetronome() {
     if (isPlaying) {
         isPlaying = false;
@@ -61,6 +67,7 @@ function startMetronome() {
     } else {
         beatsPerMinute = parseInt(tempoSlider.value);
         useSubdivisions = subdivisionToggle.checked;
+        subdivideTempoChange = subdivideTempoToggle.checked;
         tempoDeltas = [];
         loadAllTempos();
         isPlaying = true;
@@ -107,7 +114,7 @@ function playBeat() {
     }
 
     //If we want subdivisions, set an additional timer to play one halfway before the next beat
-    if (useSubdivisions) {
+    if (useSubdivisions || (subdivideTempoChange && tempoDeltas.length > 0)) {
         setTimeout(playSubdivision, 60000/(2 * beatsPerMinute + (dt/2)));
     }
     beatsPerMinute += dt;
