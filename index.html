@@ -10,7 +10,7 @@
     <body>
         <main>
         <div id="top-header">
-            <p>Bar/Beat</p>
+            <p>Bar | Beat</p>
         </div>
         <div id="main-focus">
         <p><span id="bar-text">1</span> | <span id="beat-text">1</span></p>
@@ -18,49 +18,57 @@
         </main>
 
         <div id="controls">
-        <div class="slide-container">
-            <input type="range" min="10" max="240" value="120" class="slider" id="tempo-slider">
-            <p>Tempo: <span id="tempo-text">120</span>bpm</p>
-        </div>
-        <div class="centered">
-            <button id="toggle-button">Play</button>
-            <p>(Or press c)</p>
+            <div class="slide-container">
+                <input type="range" min="10" max="240" value="120" class="slider" id="tempo-slider">
+                <p>Tempo: <span id="tempo-text">120</span>bpm</p>
+            </div>
+            <div class="centered">
+                <button id="toggle-button">Play</button>
+                <p>(Or press c)</p>
 
-        <span>Subdivide all</span>
-        <label class="switch">
-            <input type="checkbox" id="toggle-subdivisions">
-            <span class="toggle-slider"></span>
-        </label>
-        <br>
-        <span>Subdivide tempo changes</span>
-        <label class="switch">
-            <input type="checkbox" id="toggle-tempo-subdivisions" checked="true">
-            <span class="toggle-slider"></span>
-        </label>
-    </div>
+                <span>Subdivide all</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-subdivisions">
+                    <span class="toggle-slider"></span>
+                </label>
+                <br>
+                <span>Subdivide tempo changes</span>
+                <label class="switch">
+                    <input type="checkbox" id="toggle-tempo-subdivisions" checked="true">
+                    <span class="toggle-slider"></span>
+                </label>
 
+                <div>
+                    <label>
+                        Count In Measures
+                        <input type="number" id="countin" value="2">
+                    </label>
+                </div>
+            </div>
 
-        <div class="tempo-changes">
-            <h2>Tempo Changes</h2>
-                <form class="tempo-change">
-                    <label for="starting-bar">Starting bar</label>
-                    <input type="number" name="starting-bar">
-                    <label for="ending-bar">Ending bar</label>
-                    <input type="number" name="ending-bar">
-                    <br>
-                    <label for="starting-beat">Starting beat</label>
-                    <input type="number" name="starting-beat">
-                    <label for="ending-beat">Ending beat</label>
-                    <input type="number" name="ending-beat">
-                    <br>
-                    <label for="starting-tempo">Starting tempo</label>
-                    <input type="number" name="starting-tempo">
-                    <label for="ending-tempo">Ending tempo</label>
-                    <input type="number" name="ending-tempo">
-                    <button type="button">Delete</button>
-                </form>
-        </div>
-        <button id="add-tempo-change">Add Tempo Change</button>
+            
+
+            <div class="tempo-changes">
+                <h2>Tempo Changes</h2>
+                    <form class="tempo-change">
+                        <label for="starting-bar">Starting bar</label>
+                        <input type="number" name="starting-bar">
+                        <label for="ending-bar">Ending bar</label>
+                        <input type="number" name="ending-bar">
+                        <br>
+                        <label for="starting-beat">Starting beat</label>
+                        <input type="number" name="starting-beat">
+                        <label for="ending-beat">Ending beat</label>
+                        <input type="number" name="ending-beat">
+                        <br>
+                        <label for="starting-tempo">Starting tempo</label>
+                        <input type="number" name="starting-tempo">
+                        <label for="ending-tempo">Ending tempo</label>
+                        <input type="number" name="ending-tempo">
+                        <button type="button">Delete</button>
+                    </form>
+            </div>
+            <button id="add-tempo-change">Add Tempo Change</button>
 
 
         </div>

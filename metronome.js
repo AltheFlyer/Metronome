@@ -25,6 +25,7 @@ function setSliderText() {
 let toggleButton = document.getElementById("toggle-button");
 let subdivisionToggle = document.getElementById("toggle-subdivisions");
 let subdivideTempoToggle = document.getElementById("toggle-tempo-subdivisions");
+let countIn = document.getElementById("countin");
 //Load sounds
 let beatAccentSound = document.getElementById("beat-audio-main");
 let beatNormalSound = document.getElementById("beat-audio-secondary");
@@ -71,7 +72,7 @@ function startMetronome() {
         tempoDeltas = [];
         loadAllTempos();
         isPlaying = true;
-        barNumber = 1;
+        barNumber = 1 - parseInt(countin.value);
         beatNumber = 0;
         barText.innerHTML = barNumber;
         timeout = setTimeout(playBeat, 60000/beatsPerMinute);
