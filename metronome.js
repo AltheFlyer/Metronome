@@ -39,9 +39,13 @@ let timeout = function() {};
 let barText = document.getElementById("bar-text");
 let beatText = document.getElementById("beat-text");
 
+let timeSigTop = document.getElementById("time-sig-beat-text");
+let timeSigBot = document.getElementById("time-sig-note-text");
+
 let barNumber = 1;
 let beatNumber = 0;
 let beatsPerMeasure = 4;
+let beatNoteBasis = 4;
 let tempoDeltas = [];
 
 //Button toggles playing/stopping of the metronome
@@ -67,10 +71,24 @@ function startMetronome() {
         toggleButton.innerHTML = "Play";
     } else {
         beatsPerMinute = parseInt(tempoSlider.value);
+        
         useSubdivisions = subdivisionToggle.checked;
         subdivideTempoChange = subdivideTempoToggle.checked;
         tempoDeltas = [];
         loadAllTempos();
+        loadAllTimes();
+
+        if (timeChanges.has(1)) {
+            beatsPerMeasure = timeChanges.get(1).beat;
+            beatNoteBasis = timeChanges.get(1).note;
+        } else {
+            beatsPerMeasure = 4;
+            beatNoteBasis = 4;
+        }
+        
+        timeSigTop.innerHTML = beatsPerMeasure;
+        timeSigBot.innerHTML = beatNoteBasis;
+        
         isPlaying = true;
         barNumber = 1 - parseInt(countIn.value);
         beatNumber = 0;
@@ -107,6 +125,15 @@ function playBeat() {
     //Play a special sound for the first beat of every measure
     if (beatNumber == 1) {
         beatAccentSound.play();
+
+        //Check if time signature changes
+        if (timeChanges.has(barNumber)) {
+            beatsPerMeasure = timeChanges.get(barNumber).beat;
+            beatNoteBasis = timeChanges.get(barNumber).note;
+
+            timeSigTop.innerHTML = beatsPerMeasure;
+            timeSigBot.innerHTML = beatNoteBasis;
+        }
     } else {
         beatNormalSound.play();
     }
@@ -117,6 +144,11 @@ function playBeat() {
     }
     beatsPerMinute += dt;
     timeout = setTimeout(playBeat, 60000/beatsPerMinute);
+
+    if (beatsPerMinute > 1000) {
+        alert("Something went wrong");
+        clearTimeout(timeout);
+    }
 }
 
 function playSubdivision() {
@@ -145,7 +177,7 @@ function loadAllTempos() {
 }
 
 //Set delete button functionality
-changeHolder.querySelector(".tempo-change button").addEventListener("click", removeParent);
+changeHolder.querySelector(".tempo-change button").addEventListener("click", removeTempoChange);
 
 
 let addTempoChangeButton = document.getElementById("add-tempo-change");
@@ -157,13 +189,12 @@ addTempoChangeButton.addEventListener("click", function() {
     tempoChangeClone = tempoChangeClone.cloneNode(true);
     //Need to manually add delete button functionality for some reason?
     let button = tempoChangeClone.querySelector("button")
-    button.addEventListener("click", removeParent);
-
+    button.addEventListener("click", removeTempoChange);
 
     changeHolder.append(tempoChangeClone);
 });
 
-function removeParent(event) {
+function removeTempoChange(event) {
     changeHolder.removeChild(event.target.parentNode);
 }
 
@@ -172,7 +203,40 @@ function getDT(tempoChange) {
     let totalBeats = (beatsPerMeasure - tempoChange.startingBeat + 1) + tempoChange.endingBeat - 1 + ((tempoChange.endingBar) - (tempoChange.startingBar + 1)) * beatsPerMeasure;
     //console.log("beats involved");
     //console.log(totalBeats);
+    if (totalBeats == 0) {
+        return tempoChange.endingTempo - tempoChange.startingTempo;
+    }
     return (tempoChange.endingTempo - tempoChange.startingTempo)/(totalBeats);
+}
+
+let timeChanges = new Map();
+let timeChangeHolder = document.querySelector(".time-changes");
+
+function loadAllTimes() {
+    let changes = timeChangeHolder.querySelectorAll(".time-change");
+    timeChanges = new Map();
+    for (let i = 0; i < changes.length; i++) {
+        let change = changes[i].elements;
+        timeChanges.set(parseInt(change["measure"].value), {measure: parseInt(change["measure"].value), note: parseInt(change["note"].value), beat: parseInt(change["beat"].value)});
+    }
+}
+
+let addTimeChangeButton = document.getElementById("add-time-change");
+let timeChangeClone = timeChangeHolder.querySelector(".time-change");
+
+timeChangeHolder.querySelector(".time-change button").addEventListener("click", removeTimeChange);
+
+addTimeChangeButton.addEventListener("click", function() {
+    timeChangeClone = timeChangeClone.cloneNode(true);
+
+    let button = timeChangeClone.querySelector("button");
+    button.addEventListener("click", removeTimeChange);
+
+    timeChangeHolder.append(timeChangeClone);
+});
+
+function removeTimeChange(event) {
+    timeChangeHolder.removeChild(event.target.parentNode);
 }
 
 let saveField = document.getElementById("save-field");
@@ -184,17 +248,25 @@ loadButton.addEventListener("click", loadData);
 
 function saveData() {
     loadAllTempos();
+    loadAllTimes();
     //WHY ARE MAPS PAINFUL
-    let mapRep = Object.create(null);
+    let tempoObject = Object.create(null);
     for (let [k, v] of tempoChanges) {
-        mapRep[k] = v;
+        tempoObject[k] = v;
     }
+    
+    let timeObject = Object.create(null);
+    for (let [k, v] of timeChanges) {
+        timeObject[k] = v;
+    }
+
     let saveOutput = {
         tempo: tempoSlider.value,
         useSubdivisions: useSubdivisions,
         subdivideTempoChange: subdivideTempoChange,
         countIn: countIn.value,
-        tempoDeltas: mapRep
+        tempoDeltas: tempoObject,
+        timeChanges: timeObject
     };
     saveField.value = btoa(JSON.stringify(saveOutput));
 }
@@ -216,17 +288,15 @@ function loadData() {
     countIn.value = saveInput.countIn;
 
     //Pain
-    changeHolder.innerHTML = "<h2>Tempo Changes</h2>";
+    changeHolder.innerHTML = "<h3>Tempo Changes</h3>";
 
-    let tempoDeltas = new Map();
     for (let k of Object.keys(saveInput.tempoDeltas)) {
         let data = saveInput.tempoDeltas[k];
-        tempoDeltas.set(k, data);
 
         tempoChangeClone = tempoChangeClone.cloneNode(true);
         //Need to manually add delete button functionality for some reason?
         let button = tempoChangeClone.querySelector("button")
-        button.addEventListener("click", removeParent);
+        button.addEventListener("click", removeTempoChange);
     
         let form = tempoChangeClone.elements; 
         form["starting-bar"].value = data.startingBar;
@@ -237,5 +307,23 @@ function loadData() {
         form["ending-tempo"].value = data.endingTempo;
 
         changeHolder.append(tempoChangeClone);
+    }
+
+    timeChangeHolder.innerHTML = "<h3>Time Signature Changes</h3>";
+
+    for (let k of Object.keys(saveInput.timeChanges)) {
+        let data = saveInput.timeChanges[k];
+
+        timeChangeClone = timeChangeClone.cloneNode(true);
+        let button = timeChangeClone.querySelector("button");
+        button.addEventListener("click", removeTimeChange);
+
+        let form = timeChangeClone.elements;
+        console.log(data);
+        form["measure"].value = data.measure;
+        form["note"].value = data.note;
+        form["beat"].value = data.beat;
+
+        timeChangeHolder.append(timeChangeClone);
     }
 }

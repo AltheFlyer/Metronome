@@ -11,14 +11,27 @@ body {
 
 main {
     min-height: 100vh;
+    position: relative;
 }
+
+#time-sig-indicator {
+    text-align:center;
+    display: flex;
+    flex-direction: column;
+    font-size: 15vmin;
+    position: absolute;
+    top: 33vmin;
+    left: 50px;
+    line-height: 0.9;
+}
+
 
 #controls {
     padding: 5px;
     padding-bottom: 20px;
 }
 
-.tempo-change {
+.tempo-change, .time-change {
     border: 2px solid #dddddd;
     width: fit-content;
     padding: 5px;
@@ -37,7 +50,7 @@ main {
     background-color: #ee0000;
 }
 
-#add-tempo-change {
+#add-tempo-change, #add-signature-change {
     margin-top: 10px;
     background-color: #5cb85c;
     border: none;
@@ -46,7 +59,7 @@ main {
     transition: .5s;
 }
 
-#add-tempo-change:hover {
+#add-tempo-change:hover, #add-signature-change:hover {
     background-color: #7cd87c;
 }
 
@@ -152,4 +165,21 @@ input[type="number"] {
     margin-top: 3px;
     border: 1px solid #cccccc;
     border-radius: 2px;
+}
+
+.time-sig-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.time-sig {
+    margin-left: 5px;
+    margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+}
+
+.time-sig input {
+    width: 50px;
 }

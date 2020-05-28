@@ -17,6 +17,9 @@
         <div id="main-focus">
         <p><span id="bar-text">1</span> | <span id="beat-text">1</span></p>
         </div>
+        <div id="time-sig-indicator">
+            <span id="time-sig-beat-text">4</span><span id="time-sig-note-text">4</span>
+        </div>
         </main>
 
         <div id="controls">
@@ -70,6 +73,26 @@
             </div>
             <button id="add-tempo-change">Add Tempo Change</button>
 
+            <div class="time-changes">
+                <h3>Time Signature Changes</h3>
+                <form class="time-change">
+                    <label for="measure">Measure</label>
+                    <input type="number" name="measure">
+                    <br>
+                    <span class="time-sig-wrapper">
+                        Time Signature  
+                        <span class="time-sig">
+                        <input type="number" name="beat">
+                        <input type="number" name="note">
+                        </span>
+                    </span>
+                    <button class="delete-button" type="button">Delete</button>
+                </form>
+            </div>
+            <button id="add-time-change">Add Time Signature Change</button>
+
+            <p>Warning! Tempo changes will break if the time signature changes too!</p>
+
             <h3>Load/Save current settings</h3>
             <form>
                 <textarea id="save-field" cols="50" rows="20"></textarea>
@@ -79,19 +102,6 @@
 
             <p>Page by Allen Liu<br>Audio from Raymond Li</p>
         </div>
-
-        <!--
-        <div class="signature-changes">
-            <h2>Time Signature Changes</h2>
-            <form class="signature-change">
-                <input type="number" name="measure">
-                <input type="number" name="note">
-                <input type="number" name="beats">
-            </form>
-        </div>
-        -->
-
-        
 
         <audio id="beat-audio-main" src="Noise_Accent.mp3"  preload="auto"></audio>
         <audio id="beat-audio-secondary" src="Noise_Regular.mp3"  preload="auto"></audio>
