@@ -129,7 +129,12 @@ function playBeat() {
 
     //Remove tempo deltas at the end of their duration
     tempoDeltas = tempoDeltas.filter(function(value, index, arr) {
-        return value.endingBar != barNumber || value.endingBeat != beatNumber;
+        if (value.endingBar != barNumber || value.endingBeat != beatNumber) {
+            return true;
+        }
+        //The ultimate failsafe
+        beatsPerMinute = value.endingTempo;
+        return false;
     });
     tempoDeltas.forEach(delta => {
         dt += getDT(delta);
@@ -158,7 +163,7 @@ function playBeat() {
     beatsPerMinute += dt;
     timeout = setTimeout(playBeat, 60000/beatsPerMinute);
 
-    //console.log(beatsPerMinute);
+    console.log(beatsPerMinute);
 
     if (beatsPerMinute > 1000) {
         alert("Something went wrong");
