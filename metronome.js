@@ -113,11 +113,19 @@ function playBeat() {
         tempoDeltas.push(tempoChanges.get(barNumber + " " + beatNumber));
     }
 
+    let instantaneous = tempoDeltas.filter(function(value, index, arr) {
+        return value.endingBar == value.startingBar && value.endingBeat == value.startingBeat;
+    });
+
+    let dt = 0;
+    instantaneous.forEach(delta => {
+        dt += getDT(delta);
+    })
+
     //Remove tempo deltas at the end of their duration
     tempoDeltas = tempoDeltas.filter(function(value, index, arr) {
         return value.endingBar != barNumber || value.endingBeat != beatNumber;
     });
-    let dt = 0;
     tempoDeltas.forEach(delta => {
         dt += getDT(delta);
     });
@@ -164,7 +172,14 @@ function loadAllTempos() {
     tempoChanges = new Map();
     for (let i = 0; i < changes.length; i++) {
         //Load form elements
-        let change = changes[i].elements
+        let change = changes[i].elements;
+        if (change["ending-beat"].value == "") {
+            change["ending-beat"].value = change["starting-beat"].value;
+        }
+        if (change["ending-bar"].value == "") {
+            change["ending-bar"].value = change["starting-bar"].value;
+        }
+
         tempoChanges.set(change["starting-bar"].value + " " + change["starting-beat"].value, {
             startingBar: parseInt(change["starting-bar"].value),
             startingBeat: parseInt(change["starting-beat"].value),
@@ -202,7 +217,6 @@ function getDT(tempoChange) {
     //Assumes 4 beats per measure
     let totalBeats = (beatsPerMeasure - tempoChange.startingBeat + 1) + tempoChange.endingBeat - 1 + ((tempoChange.endingBar) - (tempoChange.startingBar + 1)) * beatsPerMeasure;
     //console.log("beats involved");
-    //console.log(totalBeats);
     if (totalBeats == 0) {
         return tempoChange.endingTempo - tempoChange.startingTempo;
     }
@@ -278,7 +292,6 @@ function loadData() {
     tempoText.innerHTML = tempoSlider.value;
     beatsPerMinute = parseInt(saveInput.tempo);
 
-    console.log(saveInput.useSubdivisions);
     subdivisionToggle.checked = saveInput.useSubdivisions;
     useSubdivisions = saveInput.useSubdivisions;
 
