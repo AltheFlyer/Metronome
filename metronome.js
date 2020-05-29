@@ -111,16 +111,21 @@ function playBeat() {
     //Check if tempo change should happen
     if (tempoChanges.has(barNumber + " " + beatNumber)) {
         tempoDeltas.push(tempoChanges.get(barNumber + " " + beatNumber));
+        beatsPerMinute = parseInt(tempoChanges.get(barNumber + " " + beatNumber).startingTempo);
     }
 
+    /*
     let instantaneous = tempoDeltas.filter(function(value, index, arr) {
         return value.endingBar == value.startingBar && value.endingBeat == value.startingBeat;
     });
 
-    let dt = 0;
+    
     instantaneous.forEach(delta => {
         dt += getDT(delta);
     })
+    */
+
+   let dt = 0;
 
     //Remove tempo deltas at the end of their duration
     tempoDeltas = tempoDeltas.filter(function(value, index, arr) {
@@ -152,6 +157,8 @@ function playBeat() {
     }
     beatsPerMinute += dt;
     timeout = setTimeout(playBeat, 60000/beatsPerMinute);
+
+    //console.log(beatsPerMinute);
 
     if (beatsPerMinute > 1000) {
         alert("Something went wrong");
@@ -218,7 +225,7 @@ function getDT(tempoChange) {
     let totalBeats = (beatsPerMeasure - tempoChange.startingBeat + 1) + tempoChange.endingBeat - 1 + ((tempoChange.endingBar) - (tempoChange.startingBar + 1)) * beatsPerMeasure;
     //console.log("beats involved");
     if (totalBeats == 0) {
-        return tempoChange.endingTempo - tempoChange.startingTempo;
+        return 0;//tempoChange.endingTempo - tempoChange.startingTempo;
     }
     return (tempoChange.endingTempo - tempoChange.startingTempo)/(totalBeats);
 }
